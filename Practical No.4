@@ -1,0 +1,242 @@
+from collections import deque
+import copy
+
+# Node Class
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.left = None
+        self.right = None
+
+
+# BST Class
+class BST:
+    def __init__(self):
+        self.root = None
+
+    # a. Insert (Handle duplicate entry)
+    def insert(self, node, data):
+        if node is None:
+            return Node(data)
+
+        if data < node.data:
+            node.left = self.insert(node.left, data)
+        elif data > node.data:
+            node.right = self.insert(node.right, data)
+        else:
+            print("Duplicate entry not allowed!")
+
+        return node
+
+    # b. Delete
+    def delete(self, node, data):
+        if node is None:
+            return None
+
+        if data < node.data:
+            node.left = self.delete(node.left, data)
+        elif data > node.data:
+            node.right = self.delete(node.right, data)
+        else:
+            if node.left is None:
+                return node.right
+            if node.right is None:
+                return node.left
+
+            temp = node.right
+            while temp.left:
+                temp = temp.left
+
+            node.data = temp.data
+            node.right = self.delete(node.right, temp.data)
+
+        return node
+
+    # c. Search
+    def search(self, node, data):
+        if node is None:
+            return False
+
+        if node.data == data:
+            return True
+        elif data < node.data:
+            return self.search(node.left, data)
+        else:
+            return self.search(node.right, data)
+
+    # d. Display tree (Traversal)
+    def inorder(self, node):
+        if node:
+            self.inorder(node.left)
+            print(node.data, end=" ")
+            self.inorder(node.right)
+
+    def preorder(self, node):
+        if node:
+            print(node.data, end=" ")
+            self.preorder(node.left)
+            self.preorder(node.right)
+
+    def postorder(self, node):
+        if node:
+            self.postorder(node.left)
+            self.postorder(node.right)
+            print(node.data, end=" ")
+
+    # e. Display - Depth of tree
+    def depth(self, node):
+        if node is None:
+            return 0
+
+        left = self.depth(node.left)
+        right = self.depth(node.right)
+
+        return max(left, right) + 1
+
+    # f. Display - Mirror image
+    def mirror(self, node):
+        if node:
+            node.left, node.right = node.right, node.left
+            self.mirror(node.left)
+            self.mirror(node.right)
+
+    # g. Create a copy
+    def create_copy(self):
+        new_bst = BST()
+        new_bst.root = copy.deepcopy(self.root)
+        return new_bst
+
+    # h. Display all parent nodes with their child nodes
+    def parent_nodes(self, node):
+        if node:
+            if node.left or node.right:
+                print(
+                    "Parent:", node.data,
+                    " Left:", node.left.data if node.left else "None",
+                    " Right:", node.right.data if node.right else "None"
+                )
+
+            self.parent_nodes(node.left)
+            self.parent_nodes(node.right)
+
+    # i. Display leaf nodes
+    def leaf_nodes(self, node):
+        if node:
+            if node.left is None and node.right is None:
+                print(node.data, end=" ")
+
+            self.leaf_nodes(node.left)
+            self.leaf_nodes(node.right)
+
+    # j. Display tree level wise
+    def level_order(self):
+        if self.root is None:
+            return
+
+        q = deque([self.root])
+
+        while q:
+            n = len(q)
+
+            for _ in range(n):
+                node = q.popleft()
+                print(node.data, end=" ")
+
+                if node.left:
+                    q.append(node.left)
+
+                if node.right:
+                    q.append(node.right)
+
+            print()
+
+
+# Main Program
+bst = BST()
+
+n = int(input("Enter number of nodes: "))
+
+for i in range(n):
+    data = int(input("Enter data: "))
+    bst.root = bst.insert(bst.root, data)
+
+while True:
+    print("\n----- BST MENU -----")
+    print("1. Insert")
+    print("2. Delete")
+    print("3. Search")
+    print("4. Display Traversal")
+    print("5. Display Depth")
+    print("6. Display Mirror Image")
+    print("7. Create a Copy")
+    print("8. Display Parent Nodes with Children")
+    print("9. Display Leaf Nodes")
+    print("10. Display Level Wise")
+    print("11. Exit")
+
+    ch = int(input("Enter your choice: "))
+
+    if ch == 1:
+        data = int(input("Enter data: "))
+        bst.root = bst.insert(bst.root, data)
+
+    elif ch == 2:
+        data = int(input("Enter data to delete: "))
+        bst.root = bst.delete(bst.root, data)
+        print("Node deleted.")
+
+    elif ch == 3:
+        data = int(input("Enter data to search: "))
+
+        if bst.search(bst.root, data):
+            print("Element found.")
+        else:
+            print("Element not found.")
+
+    elif ch == 4:
+        print("Inorder: ", end="")
+        bst.inorder(bst.root)
+
+        print("\nPreorder: ", end="")
+        bst.preorder(bst.root)
+
+        print("\nPostorder: ", end="")
+        bst.postorder(bst.root)
+        print()
+
+    elif ch == 5:
+        print("Depth of tree:", bst.depth(bst.root))
+
+    elif ch == 6:
+        bst.mirror(bst.root)
+        print("Mirror image created.")
+        print("Inorder: ", end="")
+        bst.inorder(bst.root)
+        print()
+
+    elif ch == 7:
+        copied_bst = bst.create_copy()
+        print("BST copy created successfully.")
+        print("Copied tree (Inorder): ", end="")
+        copied_bst.inorder(copied_bst.root)
+        print()
+
+    elif ch == 8:
+        print("Parent nodes with children:")
+        bst.parent_nodes(bst.root)
+
+    elif ch == 9:
+        print("Leaf nodes: ", end="")
+        bst.leaf_nodes(bst.root)
+        print()
+
+    elif ch == 10:
+        print("Level-wise tree:")
+        bst.level_order()
+
+    elif ch == 11:
+        print("Program ended.")
+        break
+
+    else:
+        print("Invalid choice!")
