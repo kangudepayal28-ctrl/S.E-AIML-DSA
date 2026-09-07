@@ -1,0 +1,71 @@
+#include <iostream>
+#include <cstring>
+#include <cstdlib>
+using namespace std;
+
+struct Student {
+    int id;
+    char name[50];
+    float cgpa;
+};
+
+Student *s = NULL;
+int n = 0;
+
+void addStudent() {
+    s = (Student*)realloc(s, (n + 1) * sizeof(Student));
+
+    cout << "ID: ";
+    cin >> s[n].id;
+    cout << "Name: ";
+    cin >> s[n].name;
+    cout << "CGPA: ";
+    cin >> s[n].cgpa;
+    n++;
+}
+
+void linearSearch(int id) {
+    for(int i=0;i<n;i++)
+        if(s[i].id == id) {
+            cout << "Found: " << s[i].name << endl;
+            return;
+        }
+    cout << "Not Found\n";
+}
+
+void sortByName() {
+    for(int i=0;i<n-1;i++)
+        for(int j=0;j<n-i-1;j++)
+            if(strcmp(s[j].name,s[j+1].name)>0)
+                swap(s[j],s[j+1]);
+}
+
+void sortByCGPA() {
+    for(int i=0;i<n-1;i++)
+        for(int j=0;j<n-i-1;j++)
+            if(s[j].cgpa < s[j+1].cgpa)
+                swap(s[j],s[j+1]);
+}
+
+int main() {
+    int ch, id;
+
+    do {
+        cout << "\n1.Add  2.Search  3.Sort Name  4.Sort CGPA  5.Exit\n";
+        cin >> ch;
+
+        switch(ch) {
+            case 1: addStudent(); break;
+            case 2:
+                cout << "Enter ID: ";
+                cin >> id;
+                linearSearch(id);
+                break;
+            case 3: sortByName(); cout<<"Sorted by Name\n"; break;
+            case 4: sortByCGPA(); cout<<"Sorted by CGPA\n"; break;
+        }
+    } while(ch != 5);
+
+    free(s);
+    return 0;
+}
