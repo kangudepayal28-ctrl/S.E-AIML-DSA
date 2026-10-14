@@ -1,0 +1,34 @@
+# Adjacency Matrix
+Graph = [
+ [0, 2, 0, 6, 0],
+ [2, 0, 3, 8, 5],
+ [0, 3, 0, 0, 7],
+ [6, 8, 0, 0, 9],
+ [0, 5, 7, 9, 0]
+]
+Departments = [“Computer”, “IT”, “Mechanical”, “Civil”, “Library”]
+V = len(graph)
+# --------------- Prim’s Algorithm --------------- # Def prim():
+ Selected = [False] * V
+ Selected[0] = True
+ Edge = 0
+ Cost = 0
+ Print(“\nMinimum Spanning Tree using Prim’s Algorithm\n”)
+ While edge < V – 1:
+ Minimum = INF
+ X = 0
+ Y = 0
+ For I in range(V):
+ If selected[i]:
+ For j in range(V):
+ If not selected[j] and graph[i][j]:
+ If minimum > graph[i][j]:
+ Minimum = graph[i][j]
+ X = i
+ Y = j Print(departments[x], “—“, departments[y],
+ “:”, graph[x][y])
+ Cost += graph[x][y]
+ Selected[y] = True
+ Edge += 1
+ Print(“Minimum Cost =”, cost)
+Prim()
